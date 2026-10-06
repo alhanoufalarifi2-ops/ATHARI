@@ -31,7 +31,7 @@
 المتطلبات: Node.js 18.18 أو أحدث (يفضّل 20 LTS).
 
 ```bash
-git clone https://github.com/<your-username>/ATHARI.git
+git clone https://github.com/alhanoufalarifi2-ops/ATHARI.git
 cd ATHARI
 npm install
 npm run dev
