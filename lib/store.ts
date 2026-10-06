@@ -2,7 +2,12 @@
 
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import { departments as seedDepartments, impacts as seedImpacts, patients as seedPatients } from "./mockData";
+import {
+  departments as seedDepartments,
+  impacts as seedImpacts,
+  patients as seedPatients,
+  withDemoDefaults,
+} from "./mockData";
 import {
   CATEGORY_LABELS,
   Department,
@@ -564,6 +569,19 @@ export const useAthariStore = create<AthariState>()(
     }),
     {
       name: "athari-storage-v1",
+      // v1/v2: demo records i1–i11 gained their scope/facility attribution and
+      // their submitting department. A browser that saved them earlier gets
+      // those added here (values already present are kept); nothing else in
+      // the saved state — in particular nothing the visitor created — is
+      // touched.
+      version: 2,
+      migrate: (persisted, version) => {
+        const state = persisted as Partial<AthariState> | undefined;
+        if (version < 2 && state && Array.isArray(state.impacts)) {
+          return { ...state, impacts: withDemoDefaults(state.impacts) } as AthariState;
+        }
+        return persisted as AthariState;
+      },
     }
   )
 );

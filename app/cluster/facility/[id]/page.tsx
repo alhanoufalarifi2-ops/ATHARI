@@ -2,6 +2,7 @@
 
 import Breadcrumb from "@/components/Breadcrumb";
 import FacilityTypeBadge from "@/components/FacilityTypeBadge";
+import DemoDataNote from "@/components/DemoDataNote";
 import Header from "@/components/Header";
 import KpiCard from "@/components/KpiCard";
 import { ActivityIcon, BuildingIcon, FileBarChartIcon, LayersIcon } from "@/components/icons";
@@ -59,6 +60,7 @@ export default function FacilityDashboardPage() {
       />
 
       <div className="space-y-9 px-5 py-9">
+        <DemoDataNote />
         <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
           <KpiCard label="إجمالي أثر المنشأة" value={total} icon={LayersIcon} accent="navy" />
           <KpiCard label="الأثر السريري" value={stats.clinical} icon={ActivityIcon} />

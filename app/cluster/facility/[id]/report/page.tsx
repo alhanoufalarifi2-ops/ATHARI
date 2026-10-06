@@ -1,5 +1,6 @@
 "use client";
 
+import DemoDataNote from "@/components/DemoDataNote";
 import ClusterLogo from "@/components/ClusterLogo";
 import Header from "@/components/Header";
 import PrintButton from "@/components/PrintButton";
@@ -117,6 +118,10 @@ export default function FacilityReportPage() {
                 <ClusterLogo width={100} />
                 <PrintButton />
               </div>
+            </div>
+
+            <div className="mb-6">
+              <DemoDataNote />
             </div>
 
             <section className="mb-8 print:break-inside-avoid">

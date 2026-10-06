@@ -1,5 +1,6 @@
 "use client";
 
+import DemoDataNote from "@/components/DemoDataNote";
 import ClusterLogo from "@/components/ClusterLogo";
 import FacilityTypeBadge from "@/components/FacilityTypeBadge";
 import Header from "@/components/Header";
@@ -59,6 +60,10 @@ export default function ScopeReportPage() {
                 <ClusterLogo width={100} />
                 <PrintButton />
               </div>
+            </div>
+
+            <div className="mb-6">
+              <DemoDataNote />
             </div>
 
             <section className="mb-8 print:break-inside-avoid">

@@ -1,5 +1,6 @@
 "use client";
 
+import DemoDataNote from "@/components/DemoDataNote";
 import Header from "@/components/Header";
 import KpiCard from "@/components/KpiCard";
 import ScopeCard from "@/components/ScopeCard";
@@ -23,6 +24,7 @@ export default function ClusterDashboardPage() {
       />
 
       <div className="space-y-9 px-5 py-9">
+        <DemoDataNote />
         <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
           <KpiCard label="إجمالي الآثار المعتمدة" value={total} icon={LayersIcon} accent="navy" />
           <KpiCard label="الآثار السريرية" value={clusterStats.clinical} icon={ActivityIcon} />

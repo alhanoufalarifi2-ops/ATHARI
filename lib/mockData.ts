@@ -1,4 +1,36 @@
+import { facilities, getScopeById } from "./clusterData";
 import { Department, Impact, Patient } from "./types";
+
+// The demo records below all describe long-term-care / rehabilitation cases, so
+// they are attributed to the Riyadh long-term care hospital. The names come
+// from lib/clusterData.ts (never typed here) and are what lib/clusterStats.ts
+// matches on, so these records feed the cluster / scope / facility figures
+// through the same logic as any record submitted via /submit.
+const DEMO_FACILITY_ID = "riyadh-long-term-care-hospital";
+const DEMO_FACILITY = facilities.find((f) => f.id === DEMO_FACILITY_ID)!;
+const DEMO_SCOPE = getScopeById(DEMO_FACILITY.scopeId)!;
+
+export const DEMO_IMPACT_IDS = new Set(Array.from({ length: 11 }, (_, n) => `i${n + 1}`));
+
+// Used by the persisted-store migration: adds the attribution and the
+// submitting department to demo records saved in a visitor's browser before
+// they existed. A value that is already there is kept, and every record that
+// is not a demo one is untouched. The submitting department of a demo record
+// is the first department listed on it, as in the seed data below.
+type DemoRecordShape = { id: string; scope?: string; facility?: string; submittingDepartment?: string; departments?: string[] };
+
+export function withDemoDefaults<T extends DemoRecordShape>(records: T[]): T[] {
+  return records.map((r) => {
+    if (!DEMO_IMPACT_IDS.has(r.id)) return r;
+    const next = { ...r };
+    if (!r.scope && !r.facility) {
+      next.scope = DEMO_SCOPE.name;
+      next.facility = DEMO_FACILITY.name;
+    }
+    if (!r.submittingDepartment && r.departments?.[0]) next.submittingDepartment = r.departments[0];
+    return next;
+  });
+}
 
 export const departments: Department[] = [
   { id: "pt", name: "العلاج الطبيعي" },
@@ -56,6 +88,9 @@ export const patients: Patient[] = [
 export const impacts: Impact[] = [
   {
     id: "i1",
+    scope: DEMO_SCOPE.name,
+    facility: DEMO_FACILITY.name,
+    submittingDepartment: "pt",
     patientId: "p1",
     eventDate: "2026-05-05",
     previousStatus: "طريح الفراش",
@@ -72,6 +107,9 @@ export const impacts: Impact[] = [
   },
   {
     id: "i2",
+    scope: DEMO_SCOPE.name,
+    facility: DEMO_FACILITY.name,
+    submittingDepartment: "pt",
     patientId: "p1",
     eventDate: "2026-05-14",
     previousStatus: "الجلوس بمساعدة",
@@ -87,6 +125,9 @@ export const impacts: Impact[] = [
   },
   {
     id: "i3",
+    scope: DEMO_SCOPE.name,
+    facility: DEMO_FACILITY.name,
+    submittingDepartment: "pt",
     patientId: "p1",
     eventDate: "2026-05-25",
     previousStatus: "الوقوف بمساعدة",
@@ -102,6 +143,9 @@ export const impacts: Impact[] = [
   },
   {
     id: "i4",
+    scope: DEMO_SCOPE.name,
+    facility: DEMO_FACILITY.name,
+    submittingDepartment: "pt",
     patientId: "p1",
     eventDate: "2026-06-10",
     previousStatus: "المشي بمساعدة جهاز مشي",
@@ -116,6 +160,9 @@ export const impacts: Impact[] = [
   },
   {
     id: "i5",
+    scope: DEMO_SCOPE.name,
+    facility: DEMO_FACILITY.name,
+    submittingDepartment: "speech",
     patientId: "p2",
     eventDate: "2026-04-25",
     previousStatus: "فقدان النطق التام",
@@ -131,6 +178,9 @@ export const impacts: Impact[] = [
   },
   {
     id: "i6",
+    scope: DEMO_SCOPE.name,
+    facility: DEMO_FACILITY.name,
+    submittingDepartment: "speech",
     patientId: "p2",
     eventDate: "2026-05-20",
     previousStatus: "نطق كلمات مفردة",
@@ -146,6 +196,9 @@ export const impacts: Impact[] = [
   },
   {
     id: "i7",
+    scope: DEMO_SCOPE.name,
+    facility: DEMO_FACILITY.name,
+    submittingDepartment: "resp",
     patientId: "p3",
     eventDate: "2026-06-05",
     previousStatus: "اعتماد كامل على جهاز التنفس الصناعي",
@@ -161,6 +214,9 @@ export const impacts: Impact[] = [
   },
   {
     id: "i8",
+    scope: DEMO_SCOPE.name,
+    facility: DEMO_FACILITY.name,
+    submittingDepartment: "resp",
     patientId: "p3",
     eventDate: "2026-06-20",
     previousStatus: "التنفس الذاتي مع دعم أكسجين",
@@ -175,6 +231,9 @@ export const impacts: Impact[] = [
   },
   {
     id: "i9",
+    scope: DEMO_SCOPE.name,
+    facility: DEMO_FACILITY.name,
+    submittingDepartment: "speech",
     patientId: "p4",
     eventDate: "2026-03-20",
     previousStatus: "عدم القدرة على البلع الآمن",
@@ -190,6 +249,9 @@ export const impacts: Impact[] = [
   },
   {
     id: "i10",
+    scope: DEMO_SCOPE.name,
+    facility: DEMO_FACILITY.name,
+    submittingDepartment: "wound",
     patientId: "p5",
     eventDate: "2026-07-10",
     previousStatus: "جرح مفتوح بمرحلة التهابية",
@@ -205,6 +267,9 @@ export const impacts: Impact[] = [
   },
   {
     id: "i11",
+    scope: DEMO_SCOPE.name,
+    facility: DEMO_FACILITY.name,
+    submittingDepartment: "wound",
     patientId: "p5",
     eventDate: "2026-07-28",
     previousStatus: "نمو أنسجة حبيبية",

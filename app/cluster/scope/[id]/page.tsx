@@ -2,6 +2,7 @@
 
 import Breadcrumb from "@/components/Breadcrumb";
 import FacilityCard from "@/components/FacilityCard";
+import DemoDataNote from "@/components/DemoDataNote";
 import Header from "@/components/Header";
 import KpiCard from "@/components/KpiCard";
 import PhcGatewayCard from "@/components/PhcGatewayCard";
@@ -57,6 +58,7 @@ export default function ScopeDashboardPage() {
       />
 
       <div className="space-y-9 px-5 py-9">
+        <DemoDataNote />
         <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
           <KpiCard label="إجمالي أثر النطاق" value={total} icon={LayersIcon} accent="navy" />
           <KpiCard label="الأثر السريري" value={stats.clinical} icon={ActivityIcon} />
