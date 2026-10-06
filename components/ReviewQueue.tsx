@@ -69,7 +69,8 @@ export default function ReviewQueue({ impactType }: { impactType: Track }) {
     impactType === "clinical"
       ? impacts.map((i) => ({
           id: i.id,
-          title: patients.find((p) => p.id === i.patientId)?.name ?? "غير معروف",
+          // MRN only — the patient's name is never displayed (see Patient.name).
+          title: `رقم الملف الطبي: ${patients.find((p) => p.id === i.patientId)?.mrn ?? "غير معروف"}`,
           subtitle: i.currentOutcome,
           departments: submittingDepartmentFor(i),
           createdAt: i.createdAt,

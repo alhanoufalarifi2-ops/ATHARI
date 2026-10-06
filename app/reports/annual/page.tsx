@@ -22,7 +22,8 @@ export default function AnnualReportPage() {
   // Unique participating departments across this period's approved results
   // (legacy IDs resolved, wording variants merged).
   const deptLabels = uniqueDepartments(approved.flatMap((i) => i.departments), departments);
-  const patientName = (id: string) => patients.find((p) => p.id === id)?.name ?? "غير معروف";
+  // MRN only — the patient's name is never displayed (see Patient.name).
+  const patientMrn = (id: string) => patients.find((p) => p.id === id)?.mrn ?? "غير معروف";
 
   const years = reportYearOptions(now);
 
@@ -73,7 +74,7 @@ export default function AnnualReportPage() {
                 {approved.map((impact) => (
                   <div key={impact.id} className="rounded-xl2 border border-navy/5 p-4 print:break-inside-avoid">
                     <div className="mb-1 flex flex-wrap items-center justify-between gap-2">
-                      <p className="text-sm font-bold text-navy">{patientName(impact.patientId)}</p>
+                      <p className="text-sm font-bold text-navy">رقم الملف الطبي: {patientMrn(impact.patientId)}</p>
                       <span className="text-xs text-navy/40">{formatArabicDate(impact.eventDate)}</span>
                     </div>
                     <p className="mb-2 text-sm text-navy/70">

@@ -43,6 +43,17 @@ function formatDate(iso: string, language: Language, withTime = false): string {
   }
 }
 
+// The certificates (with their position in the credited list, which is what
+// the verification code is built from) that belong to the person searching.
+function ownCertificates(
+  record: { submitters?: SubmitterInfo[]; submitter?: SubmitterInfo },
+  mobile: string
+): { person: SubmitterInfo; index: number }[] {
+  return recipientsOf(record)
+    .map((person, index) => ({ person, index }))
+    .filter(({ person }) => person.phone.trim() === mobile.trim());
+}
+
 function matchesMobile(record: { submitters?: SubmitterInfo[]; submitter?: SubmitterInfo }, mobile: string): boolean {
   const list = record.submitters && record.submitters.length > 0 ? record.submitters : record.submitter ? [record.submitter] : [];
   return list.some((s) => s.phone.trim() === mobile);
@@ -96,6 +107,9 @@ export default function TrackImpactPage() {
   const [mobileInput, setMobileInput] = useState("");
   const [error, setError] = useState("");
   const [found, setFound] = useState<FoundRecord | null>(null);
+  // The mobile number this result was looked up with — it identifies which
+  // credited person is looking, and so which certificate they are shown.
+  const [foundMobile, setFoundMobile] = useState("");
   const [searched, setSearched] = useState(false);
 
   const departmentName = (id: string) => departments.find((d) => d.id === id)?.name ?? "";
@@ -116,6 +130,7 @@ export default function TrackImpactPage() {
       setError("");
       setSearched(true);
       setFound({ track: "clinical", record: impact });
+      setFoundMobile(mobile);
       return;
     }
 
@@ -124,6 +139,7 @@ export default function TrackImpactPage() {
       setError("");
       setSearched(true);
       setFound({ track: "organizational", record: orgImpact });
+      setFoundMobile(mobile);
       return;
     }
 
@@ -345,9 +361,12 @@ export default function TrackImpactPage() {
                   </div>
                   {found.record.impactNumber && (
                     // One independent certificate per credited person (creator
-                    // + contributors), each with its own verification code.
+                    // + contributors), each with its own verification code. The
+                    // tracker only gets the certificate of the person whose
+                    // mobile number they searched with — never the other
+                    // participants' (the reviewer sees all of them in /review).
                     <div className="flex flex-wrap gap-2">
-                      {recipientsOf(found.record).map((person, index) => (
+                      {ownCertificates(found.record, foundMobile).map(({ person, index }, _i, own) => (
                         <button
                           key={index}
                           type="button"
@@ -358,7 +377,7 @@ export default function TrackImpactPage() {
                           }
                           className="rounded-xl2 bg-navy px-4 py-2 text-xs font-semibold text-white hover:bg-navy-light"
                         >
-                          {recipientsOf(found.record).length > 1
+                          {own.length > 1
                             ? `${t("track.certificateFor")} ${person.name}`
                             : t("track.certificateButton")}
                         </button>
